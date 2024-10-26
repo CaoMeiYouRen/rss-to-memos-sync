@@ -67,6 +67,7 @@ app.post('/syncFromArticles', async (c) => {
     for await (const article of filteredArticles) {
         try {
             // 检查 filteredArticles 是否已同步过
+            // TODO 考虑基于 content 去重
             const res = await D1.prepare('SELECT * FROM article WHERE link =?').bind(article.link).first()
             if (res) {
                 // 已同步过
