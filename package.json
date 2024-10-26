@@ -102,6 +102,7 @@
   "dependencies": {
     "@hono/node-server": "^1.13.2",
     "await-to-js": "^3.0.0",
+    "better-bytes": "^1.2.4",
     "cron": "^3.1.7",
     "dayjs": "^1.11.13",
     "dotenv": "^16.4.5",
