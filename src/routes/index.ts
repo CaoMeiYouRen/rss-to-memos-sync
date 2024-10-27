@@ -69,9 +69,10 @@ app.post('/syncFromArticles', async (c) => {
         },
     })
     const createMemo = memosApi.api.memoServiceCreateMemo
-    // 统计成功和失败的数量
+    // 统计成功/失败/跳过的数量
     let successCount = 0
     let failCount = 0
+    let skipCount = 0
     for await (const article of filteredArticles) {
         try {
             // 检查 filteredArticles 是否已同步过
@@ -79,6 +80,7 @@ app.post('/syncFromArticles', async (c) => {
             const res = await D1.prepare('SELECT * FROM article WHERE link =?').bind(article.link).first()
             if (res) {
                 // 已同步过
+                skipCount++
                 continue
             }
 
@@ -150,6 +152,7 @@ app.post('/syncFromArticles', async (c) => {
         data: {
             successCount,  // 成功数量
             failCount, // 失败数量
+            skipCount, // 跳过数量
         },
     }, 200)
 
