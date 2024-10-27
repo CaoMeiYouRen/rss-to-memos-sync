@@ -1,4 +1,4 @@
-name = "hono-template"
+name = "rss-to-memos-sync"
 # 默认为 Production 环境
 main = "dist/app.mjs"
 minify = true
@@ -15,12 +15,12 @@ database_id = "3b38ae7e-ae00-4383-84c1-a4e88d187ff6"
 TIMEOUT = 60000
 # 最大请求体大小(字节)，默认 100MB
 MAX_BODY_SIZE = 104857600
-# Memos API 地址
-MEMOS_API_URL = ''
-# Memos Access Token
-MEMOS_ACCESS_TOKEN = ''
-# r2-image-uploader 地址
-R2_UPLOADER_URL = ''
+# # Memos API 地址
+# MEMOS_API_URL = ''
+# # Memos Access Token
+# MEMOS_ACCESS_TOKEN = ''
+# # r2-image-uploader 地址
+# R2_UPLOADER_URL = ''
 
 
 [env.dev]
