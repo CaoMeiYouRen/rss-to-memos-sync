@@ -9,6 +9,7 @@ export type Bindings = {
     MAX_BODY_SIZE: string
     MEMOS_API_URL: string
     MEMOS_ACCESS_TOKEN: string
+    R2_UPLOADER_URL: string
     R2: R2Bucket
     D1: D1Database
 }

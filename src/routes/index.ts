@@ -1,11 +1,13 @@
 import { Hono } from 'hono'
 import { HTTPException } from 'hono/http-exception'
-import { env } from 'hono/adapter'
+import { env, getRuntimeKey } from 'hono/adapter'
 import { Item } from 'rss-parser'
+import * as cheerio from 'cheerio'
 import { Article, Bindings } from '../types'
 import { filterArticles, rssParserURL } from '@/utils/rss-helper'
 import { Api, V1Visibility } from '@/apis/memos'
 import logger from '@/middlewares/logger'
+import { htmlToMarkdown } from '@/utils/helper'
 
 const app = new Hono<{ Bindings: Bindings }>()
 
@@ -29,7 +31,10 @@ type SyncFromUrlBody = {
 type SyncFromArticlesBody = Article[]
 
 app.post('/syncFromArticles', async (c) => {
-    const { MEMOS_API_URL, MEMOS_ACCESS_TOKEN, D1 } = env(c)
+    if (getRuntimeKey() !== 'workerd') {
+        return c.json({ error: 'This function is only available in Cloudflare Workers' }, 500)
+    }
+    const { MEMOS_API_URL, MEMOS_ACCESS_TOKEN, R2_UPLOADER_URL, D1 } = env(c)
     if (!MEMOS_API_URL || !MEMOS_ACCESS_TOKEN) {
         throw new HTTPException(500, {
             message: 'MEMOS_API_URL or MEMOS_ACCESS_TOKEN is not set',
@@ -43,11 +48,11 @@ app.post('/syncFromArticles', async (c) => {
     }
     const filteredArticles = filterArticles(articles, {
         filter: {
-            limit: 20,
+            limit: 5,
             time: 3600, // 1 小时
         },
         filterout: {
-            title: '关注了|赞了|转发|抽奖|分享了|广告',
+            title: '关注了|赞了|抽奖|分享了|广告|转发动态',
         },
     })
     if (!filteredArticles?.length) {
@@ -64,6 +69,9 @@ app.post('/syncFromArticles', async (c) => {
         },
     })
     const createMemo = memosApi.api.memoServiceCreateMemo
+    // 统计成功和失败的数量
+    let successCount = 0
+    let failCount = 0
     for await (const article of filteredArticles) {
         try {
             // 检查 filteredArticles 是否已同步过
@@ -73,6 +81,7 @@ app.post('/syncFromArticles', async (c) => {
                 // 已同步过
                 continue
             }
+
             // 未同步过
             const link = article.link
             let content = article.content
@@ -90,21 +99,58 @@ app.post('/syncFromArticles', async (c) => {
                 content = `#${tag} ${content}`
             }
             // 在 content 末尾追加 原文链接
-            content = `${content}\n\n原文链接：${link}`
+            content = `${content}\n原文链接：<a href="${link}">${link}</a>`
             // 如果存在图片，则转存图片到 R2
-            // TODO: 转存图片到 R2
+            const $ = cheerio.load(content)
+            const images = $('img')
+            if (images?.length) {
+                await Promise.all(images.toArray().map(async (el) => {
+                    const src = $(el).attr('src')
+                    if (src) {
+                        // 转存图片到 R2
+                        logger.log('正在转存图片', src)
+                        const uploaderUrl = new URL(R2_UPLOADER_URL)
+                        uploaderUrl.pathname = '/upload-from-url'
+                        try {
+                            const { success, url } = await (await fetch(uploaderUrl, {
+                                method: 'POST',
+                                body: JSON.stringify({ url: src }),
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                },
+                            })).json()
+                            if (success) {
+                                logger.log('转存图片成功', url)
+                                $(el).attr('src', url)
+                            }
+                        } catch (error) {
+                            logger.error(error)
+                        }
+                    }
+                }))
+            }
+            content = $('body').html()
+
+            content = htmlToMarkdown(content)
+            logger.log('内容', content)
             // 同步到 memos
             await createMemo({
                 content,
                 visibility: V1Visibility.PUBLIC,
             })
             await D1.prepare('INSERT INTO article (link, content) VALUES (?,?)').bind(article.link, content).run()
+            successCount++
         } catch (error) {
             logger.error(error)
+            failCount++
         }
     }
     return c.json({
         message: 'Sync success',
+        data: {
+            successCount,  // 成功数量
+            failCount, // 失败数量
+        },
     }, 200)
 
 })
