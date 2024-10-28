@@ -21,7 +21,8 @@ MAX_BODY_SIZE = 104857600
 # MEMOS_ACCESS_TOKEN = ''
 # # r2-image-uploader 地址
 # R2_UPLOADER_URL = ''
-
+# 权限 token，如果留空则不验证。Bearer Auth 验权
+# AUTH_TOKEN=''
 
 [env.dev]
 # Development 环境配置

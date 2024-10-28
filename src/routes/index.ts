@@ -2,6 +2,7 @@ import { Hono } from 'hono'
 import { HTTPException } from 'hono/http-exception'
 import { env, getRuntimeKey } from 'hono/adapter'
 import * as cheerio from 'cheerio'
+import { bearerAuth } from 'hono/bearer-auth'
 import { Article, Bindings } from '../types'
 import { filterArticles } from '@/utils/rss-helper'
 import { Api, V1Visibility } from '@/apis/memos'
@@ -9,6 +10,14 @@ import logger from '@/middlewares/logger'
 import { htmlToMarkdown } from '@/utils/helper'
 
 const app = new Hono<{ Bindings: Bindings }>()
+
+app.use('*', (c, next) => {
+    const AUTH_TOKEN = env(c).AUTH_TOKEN
+    if (AUTH_TOKEN) {
+        return bearerAuth({ token: AUTH_TOKEN })(c, next)
+    }
+    return next()
+})
 
 type SyncFromUrlBody = {
     // RSS URL

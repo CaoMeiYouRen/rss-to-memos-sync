@@ -1,6 +1,9 @@
 import type { D1Database, R2Bucket } from '@cloudflare/workers-types'
 
 export type Bindings = {
+    R2: R2Bucket
+    D1: D1Database
+
     NODE_ENV: string
     PORT: string
     LOGFILES: string
@@ -10,8 +13,7 @@ export type Bindings = {
     MEMOS_API_URL: string
     MEMOS_ACCESS_TOKEN: string
     R2_UPLOADER_URL: string
-    R2: R2Bucket
-    D1: D1Database
+    AUTH_TOKEN: string
 }
 
 export interface Filter {
