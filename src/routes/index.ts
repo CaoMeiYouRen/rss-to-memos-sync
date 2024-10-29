@@ -83,9 +83,10 @@ app.post('/syncFromArticles', async (c) => {
     let skipCount = 0
     for await (const article of filteredArticles) {
         try {
+            const link = article.link
             // 检查 filteredArticles 是否已同步过
             // TODO 考虑基于 content 去重
-            const res = await D1.prepare('SELECT * FROM article WHERE link =?').bind(article.link).first()
+            const res = await D1.prepare('SELECT * FROM article WHERE link =?').bind(link).first()
             if (res) {
                 // 已同步过
                 skipCount++
@@ -93,9 +94,15 @@ app.post('/syncFromArticles', async (c) => {
             }
 
             // 未同步过
-            const link = article.link
+
             // TODO 应当检查 content 是否包含 title 的内容
             let content = article.content
+            // 检查 content 中是否包含 #NoSync，如果有，则不同步
+            if (content.includes('#NoSync')) {
+                await D1.prepare('INSERT INTO article (link, content) VALUES (?,?)').bind(link, content).run()
+                skipCount++
+                continue
+            }
             const tags = article.categories || []
             tags.push('FromRss') // 添加标签 FromRss，用于区别来源
             // 检查 content 中是否包含 tags，如果没有，追加到 content 开头
@@ -150,7 +157,7 @@ app.post('/syncFromArticles', async (c) => {
                 content,
                 visibility: V1Visibility.PUBLIC,
             })
-            await D1.prepare('INSERT INTO article (link, content) VALUES (?,?)').bind(article.link, content).run()
+            await D1.prepare('INSERT INTO article (link, content) VALUES (?,?)').bind(link, content).run()
             successCount++
         } catch (error) {
             logger.error(error)
