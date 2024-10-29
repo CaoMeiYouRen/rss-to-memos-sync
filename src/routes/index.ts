@@ -95,7 +95,8 @@ app.post('/syncFromArticles', async (c) => {
             // 未同步过
             const link = article.link
             let content = article.content
-            const tags = article.categories
+            const tags = article.categories || []
+            tags.push('FromRss') // 添加标签 FromRss，用于区别来源
             // 检查 content 中是否包含 tags，如果没有，追加到 content 开头
             // 主流的 tag 有两种格式
             // 1. 以 # 开头，以空格结尾，例如 #tag1 #tag2 #tag3
