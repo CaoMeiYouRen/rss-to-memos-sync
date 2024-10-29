@@ -57,7 +57,7 @@ app.post('/syncFromArticles', async (c) => {
     const filteredArticles = filterArticles(articles, {
         filter: {
             limit: 5,
-            time: 3600, // 1 小时
+            time: 3600 * 24, // 24 小时
         },
         filterout: {
             title: '关注了|赞了|抽奖|分享了|广告|转发动态',
