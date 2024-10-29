@@ -109,7 +109,7 @@ app.post('/syncFromArticles', async (c) => {
                 content = `#${tag} ${content}`
             }
             // 在 content 末尾追加 原文链接
-            content = `${content}\n原文链接：<a href="${link}">${link}</a>`
+            content = `${content}\n\n原文链接：<a href="${link}">${link}</a>`
             // 如果存在图片，则转存图片到 R2
             const $ = cheerio.load(content)
             const images = $('img')
