@@ -123,13 +123,13 @@ app.post('/syncFromArticles', async (c) => {
             const $ = cheerio.load(content)
             const images = $('img')
             if (images?.length) {
+                const uploaderUrl = new URL(R2_UPLOADER_URL)
+                uploaderUrl.pathname = '/upload-from-url'
                 await Promise.all(images.toArray().map(async (el) => {
                     const src = $(el).attr('src')
                     if (src) {
                         // 转存图片到 R2
                         logger.log('正在转存图片', src)
-                        const uploaderUrl = new URL(R2_UPLOADER_URL)
-                        uploaderUrl.pathname = '/upload-from-url'
                         try {
                             const { success, url } = await (await fetch(uploaderUrl, {
                                 method: 'POST',
