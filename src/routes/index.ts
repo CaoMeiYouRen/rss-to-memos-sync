@@ -97,8 +97,8 @@ app.post('/syncFromArticles', async (c) => {
 
             // TODO 应当检查 content 是否包含 title 的内容
             let content = article.content
-            // 检查 content 中是否包含 #NoSync，如果有，则不同步
-            if (content.includes('#NoSync')) {
+            // 检查 content 中是否包含 #NoSync (不区分大小写)，如果有，则不同步
+            if (/#NoSync/i.test(content)) {
                 await D1.prepare('INSERT INTO article (link, content) VALUES (?,?)').bind(link, content).run()
                 skipCount++
                 continue
