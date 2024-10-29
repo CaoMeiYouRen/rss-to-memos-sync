@@ -94,6 +94,7 @@ app.post('/syncFromArticles', async (c) => {
 
             // 未同步过
             const link = article.link
+            // TODO 应当检查 content 是否包含 title 的内容
             let content = article.content
             const tags = article.categories || []
             tags.push('FromRss') // 添加标签 FromRss，用于区别来源
@@ -110,7 +111,7 @@ app.post('/syncFromArticles', async (c) => {
                 content = `#${tag} ${content}`
             }
             // 在 content 末尾追加 原文链接
-            content = `${content}\n\n原文链接：<a href="${link}">${link}</a>`
+            content = `${content}<br/>原文链接：<a href="${link}">${link}</a>`
             // 如果存在图片，则转存图片到 R2
             const $ = cheerio.load(content)
             const images = $('img')
