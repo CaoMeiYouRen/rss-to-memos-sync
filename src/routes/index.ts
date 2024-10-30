@@ -150,8 +150,8 @@ app.post('/syncFromArticles', async (c) => {
                 }))
             }
             content = $('body').html()
-
             content = htmlToMarkdown(content)
+            content = content.replace(/\n{2,}/g, '\n') // 移除多余换行符
             logger.log('内容', content)
             // 同步到 memos
             await createMemo({
