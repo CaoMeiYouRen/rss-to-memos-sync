@@ -131,7 +131,8 @@ app.post('/syncFromArticles', async (c) => {
                         // 转存图片到 R2
                         logger.log('正在转存图片', src)
                         try {
-                            const { success, url } = await (await (c.env.UPLOADER?.fetch || fetch)(uploaderUrl, { // 如果绑定了 UPLOADER，则使用 UPLOADER 的 fetch，否则使用全局的 fetch
+                            // c.env.UPLOADER?.fetch || fetch
+                            const { success, url } = await (await fetch(uploaderUrl, {
                                 method: 'POST',
                                 body: JSON.stringify({ url: src }),
                                 headers: {

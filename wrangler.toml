@@ -5,7 +5,7 @@ minify = true
 compatibility_date = "2024-10-20"
 compatibility_flags = ["nodejs_compat"]
 
-services = [{ binding = "UPLOADER", service = "r2-image-uploader" }]
+# services = [{ binding = "UPLOADER", service = "r2-image-uploader" }]
 
 d1_databases = [
     { binding = "D1", database_name = "rss-meta", database_id = "3b38ae7e-ae00-4383-84c1-a4e88d187ff6" },
