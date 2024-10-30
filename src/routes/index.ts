@@ -42,7 +42,7 @@ app.post('/syncFromArticles', async (c) => {
     if (getRuntimeKey() !== 'workerd') {
         return c.json({ error: 'This function is only available in Cloudflare Workers' }, 500)
     }
-    const { MEMOS_API_URL, MEMOS_ACCESS_TOKEN, R2_UPLOADER_URL, D1 } = env(c)
+    const { MEMOS_API_URL, MEMOS_ACCESS_TOKEN, R2_UPLOADER_URL, D1, UPLOADER } = env(c)
     if (!MEMOS_API_URL || !MEMOS_ACCESS_TOKEN) {
         throw new HTTPException(500, {
             message: 'MEMOS_API_URL or MEMOS_ACCESS_TOKEN is not set',
@@ -131,7 +131,8 @@ app.post('/syncFromArticles', async (c) => {
                         // 转存图片到 R2
                         logger.log('正在转存图片', src)
                         try {
-                            const { success, url } = await (await fetch(uploaderUrl, {
+                            const _fetch = UPLOADER?.fetch || fetch // 如果绑定了 UPLOADER，则使用 UPLOADER 的 fetch，否则使用全局的 fetch
+                            const { success, url } = await (await _fetch(uploaderUrl, {
                                 method: 'POST',
                                 body: JSON.stringify({ url: src }),
                                 headers: {

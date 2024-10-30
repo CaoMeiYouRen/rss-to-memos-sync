@@ -1,8 +1,9 @@
-import type { D1Database, R2Bucket } from '@cloudflare/workers-types'
+import type { D1Database, R2Bucket, Service } from '@cloudflare/workers-types'
 
 export type Bindings = {
     R2: R2Bucket
     D1: D1Database
+    UPLOADER: Service
 
     NODE_ENV: string
     PORT: string
