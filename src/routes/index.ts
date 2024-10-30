@@ -125,14 +125,13 @@ app.post('/syncFromArticles', async (c) => {
             if (images?.length) {
                 const uploaderUrl = new URL(R2_UPLOADER_URL)
                 uploaderUrl.pathname = '/upload-from-url'
-                const _fetch = UPLOADER?.fetch || fetch // 如果绑定了 UPLOADER，则使用 UPLOADER 的 fetch，否则使用全局的 fetch
                 await Promise.all(images.toArray().map(async (el) => {
                     const src = $(el).attr('src')
                     if (src) {
                         // 转存图片到 R2
                         logger.log('正在转存图片', src)
                         try {
-                            const { success, url } = await (await _fetch(uploaderUrl, {
+                            const { success, url } = await (await (UPLOADER?.fetch || fetch)(uploaderUrl, { // 如果绑定了 UPLOADER，则使用 UPLOADER 的 fetch，否则使用全局的 fetch
                                 method: 'POST',
                                 body: JSON.stringify({ url: src }),
                                 headers: {
