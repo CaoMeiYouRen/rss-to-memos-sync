@@ -42,7 +42,7 @@ app.post('/syncFromArticles', async (c) => {
     if (getRuntimeKey() !== 'workerd') {
         return c.json({ error: 'This function is only available in Cloudflare Workers' }, 500)
     }
-    const { MEMOS_API_URL, MEMOS_ACCESS_TOKEN, R2_UPLOADER_URL, D1, UPLOADER } = env(c)
+    const { MEMOS_API_URL, MEMOS_ACCESS_TOKEN, UPLOADER_URL, D1, UPLOADER_AUTH_TOKEN } = env(c)
     if (!MEMOS_API_URL || !MEMOS_ACCESS_TOKEN) {
         throw new HTTPException(500, {
             message: 'MEMOS_API_URL or MEMOS_ACCESS_TOKEN is not set',
@@ -123,7 +123,7 @@ app.post('/syncFromArticles', async (c) => {
             const $ = cheerio.load(content)
             const images = $('img')
             if (images?.length) {
-                const uploaderUrl = new URL(R2_UPLOADER_URL)
+                const uploaderUrl = new URL(UPLOADER_URL)
                 uploaderUrl.pathname = '/upload-from-url'
                 await Promise.all(images.toArray().map(async (el) => {
                     const src = $(el).attr('src')
@@ -131,12 +131,12 @@ app.post('/syncFromArticles', async (c) => {
                         // 转存图片到 R2
                         logger.log('正在转存图片', src)
                         try {
-                            // c.env.UPLOADER?.fetch || fetch
                             const { success, url } = await (await fetch(uploaderUrl, {
                                 method: 'POST',
                                 body: JSON.stringify({ url: src }),
                                 headers: {
                                     'Content-Type': 'application/json',
+                                    Authorization: `Bearer ${UPLOADER_AUTH_TOKEN}`,
                                 },
                             })).json()
                             if (success) {

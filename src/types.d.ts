@@ -11,9 +11,15 @@ export type Bindings = {
     LOG_LEVEL: string
     TIMEOUT: string
     MAX_BODY_SIZE: string
+    // Memos API 地址
     MEMOS_API_URL: string
+    // Memos Access Token
     MEMOS_ACCESS_TOKEN: string
-    R2_UPLOADER_URL: string
+    // r2-image-uploader/sharp-cloud-uploader 地址
+    UPLOADER_URL: string
+    // 上传器认证 token
+    UPLOADER_AUTH_TOKEN: string
+    // 权限 token，如果留空则不验证。Bearer Auth 验权
     AUTH_TOKEN: string
 }
 
