@@ -2,7 +2,7 @@ name = "rss-to-memos-sync"
 # 默认为 Production 环境
 main = "dist/app.mjs"
 minify = true
-compatibility_date = "2024-10-20"
+compatibility_date = "2026-04-20"
 compatibility_flags = ["nodejs_compat"]
 
 # services = [{ binding = "UPLOADER", service = "r2-image-uploader" }]
