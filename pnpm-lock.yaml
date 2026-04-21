@@ -21,8 +21,8 @@ importers:
         specifier: ^3.0.0
         version: 3.0.0
       better-bytes:
-        specifier: ^1.2.4
-        version: 1.2.4
+        specifier: ^1.2.6
+        version: 1.2.6
       cheerio:
         specifier: ^1.2.0
         version: 1.2.0
@@ -1749,9 +1749,9 @@ packages:
   before-after-hook@4.0.0:
     resolution: {integrity: sha512-q6tR3RPqIB1pMiTRMFcZwuG5T8vwp+vUvEG0vuI6B+Rikh5BfPp2fQ82c925FOs+b0lcFQ8CFrL+KbilfZFhOQ==}
 
-  better-bytes@1.2.4:
-    resolution: {integrity: sha512-lA8ZltmVDd7ThuUtZgZxKMsb2I7qLZYHsaT+CkuMZeHLIXxiCxqgqokNNG+1WKTccs+ybFjeAW6+pc3gnKdoRg==}
-    engines: {node: '>=16'}
+  better-bytes@1.2.6:
+    resolution: {integrity: sha512-4eznQOCU/S7C9SzRAksDM3VIPxHYsANTaWJSyF/9gjYWqXxtrWwjbP91tEkxg/Fu+ZxKZIF8iyPUJfB49nzuBw==}
+    engines: {node: '>=18'}
 
   binary-extensions@2.3.0:
     resolution: {integrity: sha512-Ceh+7ox5qe7LJuLHoY0feh3pHuUDHAcRUeyL2VYghZwfpkNIy/+8Ocg0a3UuSoYzavmylwuLWQOf3hl0jjMMIw==}
@@ -5102,6 +5102,9 @@ packages:
   tslib@2.8.0:
     resolution: {integrity: sha512-jWVzBLplnCmoaTr13V9dYbiQ99wvZRd0vNWaDRg+aVYRcjDF3nDksxFDE/+fkXnKhpnUUkmx5pK/v8mCtLVqZA==}
 
+  tslib@2.8.1:
+    resolution: {integrity: sha512-oJFu94HQb+KVduSUQL7wnpmqnfmLsOA/nAh6b6EH0wCEoK0/mPeXU6c3wKDV83MkOuHPRHtSXKKU99IBazS/2w==}
+
   tsup@8.3.0:
     resolution: {integrity: sha512-ALscEeyS03IomcuNdFdc0YWGVIkwH1Ws7nfTbAPuoILvEV2hpGQAY72LIOjglGo4ShWpZfpBqP/jpQVCzqYQag==}
     engines: {node: '>=18'}
@@ -5867,7 +5870,7 @@ snapshots:
 
   '@emnapi/runtime@1.10.0':
     dependencies:
-      tslib: 2.8.0
+      tslib: 2.8.1
     optional: true
 
   '@epic-web/invariant@1.0.0': {}
@@ -7158,9 +7161,9 @@ snapshots:
 
   before-after-hook@4.0.0: {}
 
-  better-bytes@1.2.4:
+  better-bytes@1.2.6:
     dependencies:
-      tslib: 2.8.0
+      tslib: 2.8.1
 
   binary-extensions@2.3.0: {}
 
@@ -10467,7 +10470,7 @@ snapshots:
 
   rxjs@7.8.1:
     dependencies:
-      tslib: 2.8.0
+      tslib: 2.8.1
 
   sade@1.8.1:
     dependencies:
@@ -11024,6 +11027,8 @@ snapshots:
       strip-bom: 3.0.0
 
   tslib@2.8.0: {}
+
+  tslib@2.8.1: {}
 
   tsup@8.3.0(jiti@2.6.1)(tsx@4.21.0)(typescript@6.0.3)(yaml@2.8.3):
     dependencies:
