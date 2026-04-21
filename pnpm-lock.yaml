@@ -57,8 +57,8 @@ importers:
         specifier: ^2.8.0
         version: 2.8.0
       turndown:
-        specifier: ^7.2.0
-        version: 7.2.0
+        specifier: ^7.2.4
+        version: 7.2.4
       winston:
         specifier: ^3.15.0
         version: 3.15.0
@@ -4985,8 +4985,9 @@ packages:
     resolution: {integrity: sha512-1h/Lnq9yajKY2PEbBadPXj3VxsDDu844OnaAo52UVmIzIvwwtBPIuNvkjuzBlTWpfJyUbG3ez0KSBibQkj4ojg==}
     engines: {node: '>=0.6.11 <=0.7.0 || >=0.7.3'}
 
-  turndown@7.2.0:
-    resolution: {integrity: sha512-eCZGBN4nNNqM9Owkv9HAtWRYfLA4h909E/WGAWWBpmB275ehNhZyk87/Tpvjbp0jjNl9XwCsbe6bm6CqFsgD+A==}
+  turndown@7.2.4:
+    resolution: {integrity: sha512-I8yFsfRzmzK0WV1pNNOA4A7y4RDfFxPRxb3t+e3ui14qSGOxGtiSP6GjeX+Y6CHb7HYaFj7ECUD7VE5kQMZWGQ==}
+    engines: {node: '>=18', npm: '>=9'}
 
   type-check@0.4.0:
     resolution: {integrity: sha512-XleUoc9uwGXqjWwXaUTZAmzMcFZ5858QA2vvx1Ur5xIcixXIP+8LnFDgRplU30us6teqdlskFfu+ae4K79Ooew==}
@@ -10794,7 +10795,7 @@ snapshots:
 
   tunnel@0.0.6: {}
 
-  turndown@7.2.0:
+  turndown@7.2.4:
     dependencies:
       '@mixmark-io/domino': 2.2.0
 
