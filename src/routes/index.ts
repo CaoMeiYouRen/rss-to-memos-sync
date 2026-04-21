@@ -19,11 +19,6 @@ app.use('*', (c, next) => {
     return next()
 })
 
-type SyncFromUrlBody = {
-    // RSS URL
-    url: string
-}
-
 // app.post('/syncFromUrl', async (c) => {
 //     const { MEMOS_API_URL, MEMOS_ACCESS_TOKEN } = env(c)
 //     const { url } = await c.req.json<SyncBody>()
@@ -112,7 +107,7 @@ app.post('/syncFromArticles', async (c) => {
             // 2. 以 # 开头，以 # 结尾，例如 #tag1# #tag2# #tag3#
             for (const tag of tags) {
                 // 检查 tag 是否已存在
-                if (content.includes(`#${tag} `) ) {
+                if (content.includes(`#${tag} `)) {
                     continue
                 }
                 if (content.includes(`#${tag}#`)) {
@@ -173,7 +168,7 @@ app.post('/syncFromArticles', async (c) => {
     return c.json({
         message: 'Sync success',
         data: {
-            successCount,  // 成功数量
+            successCount, // 成功数量
             failCount, // 失败数量
             skipCount, // 跳过数量
         },
