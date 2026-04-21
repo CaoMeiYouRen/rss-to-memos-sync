@@ -6,7 +6,7 @@ on:
 # 仅取消针对当前工作流正在进行的作业或运行
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: false # 允许多个发布流程同时进行，避免中断
 jobs:
   release:
     name: Release

@@ -9,7 +9,7 @@ on:
 # 仅取消针对当前工作流正在进行的作业或运行
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: true # 取消正在进行的发布流程，确保同一时间只有一个发布流程在运行
 
 jobs:
   test:
