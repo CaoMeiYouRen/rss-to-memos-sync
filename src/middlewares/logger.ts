@@ -1,22 +1,15 @@
 import path from 'path'
-// import * as winston from 'winston'
-// import DailyRotateFile from 'winston-daily-rotate-file'
-import { getRuntimeKey } from 'hono/adapter'
+import { LOGFILES, LOG_LEVEL } from '@/env'
+import winston from 'winston'
+import DailyRotateFile from 'winston-daily-rotate-file'
 import { logger as honoLogger } from 'hono/logger'
-import { LOG_LEVEL, LOGFILES } from '@/env'
 
 async function createLogger() {
-    const runtimeKey = getRuntimeKey()
-    if (process.env.RUNTIME_KEY === 'cloudflare-workers' || runtimeKey === 'workerd') {
-        return console
-    }
-    const logDir = path.resolve('logs')
-    const winston = await import('winston')
-    const DailyRotateFile = (await import('winston-daily-rotate-file')).default
-
+    const logDir = path.join(process.cwd(), 'logs')
     const format = winston.format.combine(
-        winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss.SSSZ' }),
-        winston.format.printf((info: any) => `[${info.timestamp}] ${info.level}: ${info.message}`),
+        winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss.SSS' }),
+        winston.format.align(),
+        winston.format.printf((info) => `${info.timestamp} ${info.level}: ${info.message}`),
     )
 
     const dailyRotateFileOption = {
@@ -42,35 +35,43 @@ async function createLogger() {
                     }),
                 ),
             }),
-            LOGFILES && new DailyRotateFile({
-                ...dailyRotateFileOption,
-                filename: '%DATE%.log',
-            }),
-            LOGFILES && new DailyRotateFile({
-                ...dailyRotateFileOption,
-                level: 'error',
-                filename: '%DATE%.errors.log',
-            }),
-        ].filter(Boolean),
-        exceptionHandlers: [
-            LOGFILES && new DailyRotateFile({
-                ...dailyRotateFileOption,
-                level: 'error',
-                filename: '%DATE%.errors.log',
-            }),
-        ].filter(Boolean),
-        rejectionHandlers: [
-            LOGFILES && new DailyRotateFile({
-                ...dailyRotateFileOption,
-                level: 'error',
-                filename: '%DATE%.errors.log',
-            }),
-        ].filter(Boolean),
+            ...(LOGFILES
+                ? [
+                    new DailyRotateFile({
+                        ...dailyRotateFileOption,
+                        filename: '%DATE%.log',
+                    }),
+                    new DailyRotateFile({
+                        ...dailyRotateFileOption,
+                        filename: '%DATE%.error.log',
+                        level: 'error',
+                    }),
+                ]
+                : []),
+        ],
+        exceptionHandlers: LOGFILES
+            ? [
+                new DailyRotateFile({
+                    ...dailyRotateFileOption,
+                    level: 'error',
+                    filename: '%DATE%.exception.log',
+                }),
+            ]
+            : [],
+        rejectionHandlers: LOGFILES
+            ? [
+                new DailyRotateFile({
+                    ...dailyRotateFileOption,
+                    level: 'error',
+                    filename: '%DATE%.rejection.log',
+                }),
+            ]
+            : [],
     })
     return winstonLogger
 }
 
 const logger = await createLogger()
-const loggerMiddleware = honoLogger(logger.info)
+const loggerMiddleware = honoLogger((message: string) => logger.info(message))
 export { loggerMiddleware }
 export default logger

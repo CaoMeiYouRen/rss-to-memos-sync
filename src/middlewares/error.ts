@@ -4,7 +4,7 @@ import { ErrorHandler, HTTPResponseError, NotFoundHandler } from 'hono/types'
 import { StatusCode } from 'hono/utils/http-status'
 import logger from '@/middlewares/logger'
 
-export const errorhandler: ErrorHandler = (error: HTTPResponseError, c: Context) => {
+export const errorhandler: ErrorHandler = (error: Error | HTTPResponseError, c: Context) => {
     const message = process.env.NODE_ENV === 'production' ? `${error.name}: ${error.message}` : error.stack
     let status = 500
     if (error instanceof HTTPException) {

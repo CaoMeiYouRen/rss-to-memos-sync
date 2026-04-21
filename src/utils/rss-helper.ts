@@ -59,10 +59,20 @@ export function filterArticles(articles: Article[], condition: Condition): Artic
                 return true
             }
             if (field === 'categories') {
-                // 有一个 category 对的上就 排除
-                return !article[field].some((category) => XRegExp(filterout[field], 'ig').test(category))
+                // 有有一个 category 对的上就 排除
+                const fieldVal = article[field]
+                const filterVal = filterout[field]
+                if (fieldVal && filterVal) {
+                    return !fieldVal.some((category) => XRegExp(filterVal, 'ig').test(category))
+                }
+                return true
             }
-            return !XRegExp(filterout[field], 'ig').test(article[field])
+            const fieldVal = article[field]
+            const filterVal = filterout[field]
+            if (fieldVal && filterVal) {
+                return !XRegExp(filterVal, 'ig').test(fieldVal as string)
+            }
+            return true
         }))
         // 再判断 filter
         .filter((article) => filterFields.every((field) => { // 所有条件为 交集，即 需要全部条件 符合
@@ -71,13 +81,28 @@ export function filterArticles(articles: Article[], condition: Condition): Artic
             }
             if (field === 'enclosureLength') {
                 // 保留体积，只下载体积小于 enclosureLength 的资源
-                return parseDataSize(filter.enclosureLength) > article.enclosureLength
+                const limit = filter.enclosureLength
+                const actual = article.enclosureLength
+                if (limit !== undefined && actual !== undefined) {
+                    return parseDataSize(limit) > actual
+                }
+                return true
             }
             if (field === 'categories') {
                 // 有一个 category 对的上就为 true
-                return article[field].some((category) => XRegExp(filter[field], 'ig').test(category))
+                const fieldVal = article[field]
+                const filterVal = filter[field]
+                if (fieldVal && filterVal) {
+                    return fieldVal.some((category) => XRegExp(filterVal, 'ig').test(category))
+                }
+                return true
             }
-            return XRegExp(filter[field], 'ig').test(article[field])
+            const fieldVal = article[field]
+            const filterVal = filter[field]
+            if (fieldVal && filterVal) {
+                return XRegExp(filterVal, 'ig').test(fieldVal as string)
+            }
+            return true
         }))
         .slice(0, filter.limit || 20) // 默认最多 20 条
 }

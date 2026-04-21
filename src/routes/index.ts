@@ -91,7 +91,7 @@ app.post('/syncFromArticles', async (c) => {
             // 未同步过
 
             // TODO 应当检查 content 是否包含 title 的内容
-            let content = article.content
+            let content = article.content || ''
             // 检查 content 中是否包含 #NoSync (不区分大小写)，如果有，则不同步
             if (/#No(-?)Sync/i.test(content)) {
                 await D1.prepare('INSERT INTO article (link, content) VALUES (?,?)').bind(link, content).run()
@@ -149,7 +149,7 @@ app.post('/syncFromArticles', async (c) => {
                     }
                 }))
             }
-            content = $('body').html()
+            content = $('body').html() || ''
             content = htmlToMarkdown(content)
             content = content.replace(/\n+/g, '\n').replace(/^\s+|\s+$/gm, '') // 移除多余换行符和空格
             logger.log('内容', content)
