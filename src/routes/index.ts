@@ -103,6 +103,7 @@ app.post('/syncFromArticles', async (c) => {
                 skipCount++
                 continue
             }
+            content += '\n\n' // 在内容末尾添加换行，分隔原文链接和标签
             const tags = article.categories || []
             tags.push('FromRss') // 添加标签 FromRss，用于区别来源
             // 检查 content 中是否包含 tags，如果没有，追加到 content 开头
@@ -111,11 +112,15 @@ app.post('/syncFromArticles', async (c) => {
             // 2. 以 # 开头，以 # 结尾，例如 #tag1# #tag2# #tag3#
             for (const tag of tags) {
                 // 检查 tag 是否已存在
-                if (content.includes(`#${tag} `) || content.includes(`#${tag}#`)) {
+                if (content.includes(`#${tag} `) ) {
                     continue
                 }
-                // 不存在，追加到 content 开头
-                content = `#${tag} ${content}`
+                if (content.includes(`#${tag}#`)) {
+                    content = content.replace(`#${tag}#`, `#${tag} `) // 将 #tag# 替换为 #tag 以统一格式
+                    continue
+                }
+                // 不存在，追加到 content 末尾
+                content = `${content} #${tag}`
             }
             // 在 content 末尾追加 原文链接
             content = `${content}<br/>原文链接：<a href="${link}">${link}</a>`
