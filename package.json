@@ -63,7 +63,7 @@
     "tsx": "^4.21.0",
     "typescript": "^6.0.3",
     "vercel": "^37.12.1",
-    "wrangler": "^3.83.0"
+    "wrangler": "^4.84.1"
   },
   "config": {
     "commitizen": {
