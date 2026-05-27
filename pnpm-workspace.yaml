@@ -1,0 +1,12 @@
+packages:
+  - "."
+
+overrides:
+  compare-func: ^2.0.0
+
+strictPeerDependencies: false
+
+allowBuilds:
+  esbuild: true
+  sharp: true
+  workerd: true

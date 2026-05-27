@@ -10,6 +10,8 @@ FROM nodejs AS builder
 
 WORKDIR /app
 
+RUN corepack enable && corepack prepare pnpm@11 --activate
+
 COPY package.json .npmrc pnpm-lock.yaml /app/
 
 RUN pnpm i --frozen-lockfile
@@ -22,6 +24,8 @@ RUN pnpm run build
 FROM nodejs AS docker-minifier
 
 WORKDIR /app
+
+RUN corepack enable && corepack prepare pnpm@11 --activate
 
 RUN pnpm add @vercel/nft@0.24.4 fs-extra@11.2.0 --save-prod
 
