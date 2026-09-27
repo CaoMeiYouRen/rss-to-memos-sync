@@ -1,6 +1,9 @@
 <h1 align="center">rss-to-memos-sync </h1>
 <p>
   <img alt="Version" src="https://img.shields.io/github/package-json/v/CaoMeiYouRen/rss-to-memos-sync.svg" />
+  <a href="https://app.codecov.io/gh/CaoMeiYouRen/rss-to-memos-sync" target="_blank">
+    <img alt="Codecov" src="https://img.shields.io/codecov/c/github/CaoMeiYouRen/rss-to-memos-sync?branch=master">
+  </a>
   <a href="https://github.com/CaoMeiYouRen/rss-to-memos-sync/actions?query=workflow%3ARelease" target="_blank">
     <img alt="GitHub Workflow Status" src="https://img.shields.io/github/actions/workflow/status/CaoMeiYouRen/rss-to-memos-sync/release.yml?branch=master">
   </a>

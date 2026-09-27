@@ -40,6 +40,8 @@ jobs:
       - run: pnpm i --frozen-lockfile
       - run: pnpm run lint
       - run: pnpm run build
+      - name: Run tests
+        run: pnpm test
   build:
     needs: test # 等待 test 执行成功
     runs-on: ubuntu-latest

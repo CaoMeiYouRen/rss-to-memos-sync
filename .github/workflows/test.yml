@@ -22,3 +22,11 @@ jobs:
       - run: pnpm i --frozen-lockfile
       - run: pnpm run lint
       - run: pnpm run build
+      - name: Run tests
+        run: pnpm test
+      - name: Run tests with coverage
+        run: pnpm run test:coverage
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v7
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
