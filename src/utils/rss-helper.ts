@@ -51,7 +51,11 @@ export function filterArticles(articles: Article[], condition: Condition): Artic
             if (!article.pubDate || !condition.filter.time) { // 没有 pubDate/filter.time 不受过滤时间限制
                 return true
             }
-            return dayjs().diff(article.pubDate, 'second') <= condition.filter.time
+            const pubDate = dayjs(article.pubDate)
+            if (!pubDate.isValid()) {
+                return true
+            }
+            return dayjs().diff(pubDate, 'second') <= condition.filter.time
         })
         // 先判断 filterout
         .filter((article) => filterFields.every((field) => { // 所有条件为 并集，即 有一个 不符合 就排除

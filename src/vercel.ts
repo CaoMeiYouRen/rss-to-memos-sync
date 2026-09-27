@@ -1,6 +1,6 @@
 import { name } from '../package.json'
 import app from './app'
-import logger from './middlewares/logger'
+import { logger } from './middlewares/logger'
 export const runtime = 'nodejs'
 
 export const config = {

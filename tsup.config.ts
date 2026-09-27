@@ -45,6 +45,7 @@ const tsupOptions: Options = {
 
 const cloudflareOptions: Options = {
     ...tsupOptions,
+    platform: 'neutral',
     entry: ['src/app.ts'],
     format: ['esm'],
     replaceNodeEnv: false,

@@ -6,7 +6,7 @@ import { bearerAuth } from 'hono/bearer-auth'
 import { Article, Bindings } from '../types'
 import { filterArticles } from '@/utils/rss-helper'
 import { Api, V1Visibility } from '@/apis/memos'
-import logger from '@/middlewares/logger'
+import { logger } from '@/middlewares/logger'
 import { htmlToMarkdown } from '@/utils/helper'
 
 const app = new Hono<{ Bindings: Bindings }>()
@@ -14,7 +14,7 @@ const app = new Hono<{ Bindings: Bindings }>()
 app.use('*', (c, next) => {
     const AUTH_TOKEN = env(c).AUTH_TOKEN
     if (AUTH_TOKEN) {
-        return bearerAuth({ token: AUTH_TOKEN })(c, next)
+        return bearerAuth({ token: AUTH_TOKEN })(c as any, next)
     }
     return next()
 })
@@ -49,7 +49,13 @@ app.post('/syncFromArticles', async (c) => {
             message: 'articles is required',
         })
     }
-    const filteredArticles = filterArticles(articles, {
+    const parsedArticles = articles.map((article) => ({
+        ...article,
+        pubDate: article.pubDate ? new Date(article.pubDate) : undefined,
+        createdAt: article.createdAt ? new Date(article.createdAt) : article.createdAt,
+        updatedAt: article.updatedAt ? new Date(article.updatedAt) : article.updatedAt,
+    }))
+    const filteredArticles = filterArticles(parsedArticles, {
         filter: {
             limit: 5,
             time: 3600 * 24, // 24 小时
@@ -144,7 +150,7 @@ app.post('/syncFromArticles', async (c) => {
                                 $(el).attr('src', url)
                             }
                         } catch (error) {
-                            logger.error(error)
+                            logger.error('Image upload failed', error as Error)
                         }
                     }
                 }))
@@ -161,7 +167,7 @@ app.post('/syncFromArticles', async (c) => {
             await D1.prepare('INSERT INTO article (link, content) VALUES (?,?)').bind(link, content).run()
             successCount++
         } catch (error) {
-            logger.error(error)
+            logger.error('Article sync failed', error as Error)
             failCount++
         }
     }

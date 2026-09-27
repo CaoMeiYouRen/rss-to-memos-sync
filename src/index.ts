@@ -2,7 +2,7 @@ import { serve } from '@hono/node-server'
 import { name } from '../package.json'
 import { PORT } from './env'
 import app from './app'
-import logger from './middlewares/logger'
+import { logger } from './middlewares/logger'
 
 serve({
     fetch: app.fetch,
