@@ -1,5 +1,4 @@
 import { getRuntimeKey } from 'hono/adapter'
-import { LOG_LEVEL } from '@/env'
 
 type LogLevel = 'silly' | 'debug' | 'verbose' | 'info' | 'warn' | 'error' | 'http'
 
@@ -13,7 +12,8 @@ const LOG_LEVELS: Record<LogLevel, number> = {
     http: 6,
 }
 
-const currentLevel = LOG_LEVELS[LOG_LEVEL as LogLevel] ?? LOG_LEVELS.info
+const DEFAULT_LOG_LEVEL = 'info'
+const currentLevel = LOG_LEVELS[DEFAULT_LOG_LEVEL as LogLevel] ?? LOG_LEVELS.info
 
 function shouldLog(level: LogLevel): boolean {
     return LOG_LEVELS[level] >= currentLevel

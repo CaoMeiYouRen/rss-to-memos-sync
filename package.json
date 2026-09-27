@@ -36,7 +36,10 @@
     "deploy:vercel": "vercel",
     "dev:wrangler": "wrangler dev --env dev",
     "deploy:wrangler": "wrangler deploy",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage"
   },
   "packageManager": "pnpm@11.2.2",
   "devDependencies": {
@@ -48,6 +51,7 @@
     "@types/node": "^26.4.0",
     "@types/turndown": "^5.0.6",
     "@vercel/nft": "^1.11.0",
+    "@vitest/coverage-v8": "^5.0.2",
     "commitizen": "^4.3.1",
     "commitlint-config-cmyr": "^1.0.0",
     "cross-env": "^10.1.0",
@@ -64,6 +68,7 @@
     "tsx": "^4.23.12",
     "typescript": "^6.0.3",
     "vercel": "^59.9.1",
+    "vitest": "^5.0.2",
     "wrangler": "^4.115.0"
   },
   "config": {
